@@ -9,7 +9,7 @@ const AboutTwo = lazy(() => import("./Components/Pages/AboutTwo"));
 const ContactUs = lazy(() => import("./Components/Pages/ContactUs"));
 const EventSingle = lazy(() => import("./Components/Pages/EventSingle"));
 const Blogs = lazy(() => import("./Components/Pages/SingleBlog"));
-const BlogsList = lazy(() => import("./Components/Pages/BlogList"));
+const BlogsList = lazy(() => import("./Components/Pages/Blog-Standard"));
 const Skin = lazy(() => import("./Components/Pages/Skin"));
 const Hair = lazy(() => import("./Components/Pages/Hair"));
 const Body = lazy(() => import("./Components/Pages/Body"));

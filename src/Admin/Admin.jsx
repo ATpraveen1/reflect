@@ -40,85 +40,86 @@ export default function Admin() {
   const [Offers,setOffers] = useState([]);
 
   // Blog
-    const [BlogImageUpload, setBlogImageUpload] = useState(null);
-    const [imageURL, setImageURL] = useState('');
-    const [BlogTitle, setBlogTitle] = useState('');
-    const [BlogDescription, setBlogDescription] = useState('');
-    const [Subtitle1, setSubtitle1] = useState('');
-    const [SubtitleDescription1, setSubtitleDescription1] = useState('');
-    const [Subtitle2, setSubtitle2] = useState('');
-    const [SubtitleDescription2, setSubtitleDescription2] = useState('');
-    const [blogPosts, setBlogPosts] = useState([]);
-  
-    const blogPostsCollection = collection(db, "blogs");
-  
-    const BlogSubmit = async () => {
-      if (!BlogImageUpload || !BlogTitle || !BlogDescription || !Subtitle1 || !SubtitleDescription1 || !Subtitle2 || !SubtitleDescription2) {
-        alert("Please fill in all fields and select an image.");
-        return;
-      }
-  
-      const imageRef = ref(storage, `blogs/${BlogImageUpload.name + uuidv4()}`);
-      
-      try {
-        const snapshot = await uploadBytes(imageRef, BlogImageUpload);
-        const url = await getDownloadURL(snapshot.ref);
-        setImageURL(url);
-  
-        const blogPost = {
-          title: BlogTitle,
-          description: BlogDescription,
-          imageURL: url,
-          subtitles: [
-            { title: Subtitle1, description: SubtitleDescription1 },
-            { title: Subtitle2, description: SubtitleDescription2 }
-          ]
-        };
-  
-        await addDoc(blogPostsCollection, blogPost);
-        alert("Blog has been created and image uploaded");
-  
-        // Reset form fields
-        setBlogImageUpload(null);
-        setImageURL('');
-        setBlogTitle('');
-        setBlogDescription('');
-        setSubtitle1('');
-        setSubtitleDescription1('');
-        setSubtitle2('');
-        setSubtitleDescription2('');
-  
-        // Update the blog posts list after submission
-        fetchBlogPosts();
-      } catch (error) {
-        console.error("Error creating blog post:", error);
-        alert("Error creating blog post, please try again");
-      }
-    };
-  
-    const fetchBlogPosts = async () => {
-      try {
-        const querySnapshot = await getDocs(blogPostsCollection);
-        const posts = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setBlogPosts(posts);
-        console.log('Fetched Blog Posts:', posts); // Console log the fetched data
-      } catch (error) {
-        console.error("Error fetching blog posts:", error);
-      }
-    };
-  
-    const deleteBlogPost = async (id) => {
-      try {
-        await deleteDoc(doc(db, "blogs", id));
-        fetchBlogPosts();
-      } catch (error) {
-        console.error("Error deleting blog post:", error);
-      }
-    };
-  
-    useEffect(() => {
+  const [BlogImageUpload, setBlogImageUpload] = useState(null);
+  const [imageURL, setImageURL] = useState('');
+  const [BlogTitle, setBlogTitle] = useState('');
+  const [BlogDescription, setBlogDescription] = useState('');
+  const [subtitles, setSubtitles] = useState([{ title: '', description: '' }]);
+  const [blogPosts, setBlogPosts] = useState([]);
+
+  const blogPostsCollection = collection(db, "blogs");
+
+  const BlogSubmit = async () => {
+    if (!BlogImageUpload || !BlogTitle || !BlogDescription || subtitles.some(sub => !sub.title || !sub.description)) {
+      alert("Please fill in all fields and select an image.");
+      return;
+    }
+
+    const imageRef = ref(storage, `blogs/${BlogImageUpload.name + uuidv4()}`);
+
+    try {
+      const snapshot = await uploadBytes(imageRef, BlogImageUpload);
+      const url = await getDownloadURL(snapshot.ref);
+      setImageURL(url);
+
+      const blogPost = {
+        title: BlogTitle,
+        description: BlogDescription,
+        imageURL: url,
+        subtitles: subtitles
+      };
+
+      await addDoc(blogPostsCollection, blogPost);
+      alert("Blog has been created and image uploaded");
+
+      // Reset form fields
+      setBlogImageUpload(null);
+      setImageURL('');
+      setBlogTitle('');
+      setBlogDescription('');
+      setSubtitles([{ title: '', description: '' }]);
+
+      // Update the blog posts list after submission
       fetchBlogPosts();
-    }, []);
+    } catch (error) {
+      console.error("Error creating blog post:", error);
+      alert("Error creating blog post, please try again");
+    }
+  };
+
+  const fetchBlogPosts = async () => {
+    try {
+      const querySnapshot = await getDocs(blogPostsCollection);
+      const posts = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setBlogPosts(posts);
+      console.log('Fetched Blog Posts:', posts); // Console log the fetched data
+    } catch (error) {
+      console.error("Error fetching blog posts:", error);
+    }
+  };
+
+  const deleteBlogPost = async (id) => {
+    try {
+      await deleteDoc(doc(db, "blogs", id));
+      fetchBlogPosts();
+    } catch (error) {
+      console.error("Error deleting blog post:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBlogPosts();
+  }, []);
+
+  const addSubtitle = () => {
+    setSubtitles([...subtitles, { title: '', description: '' }]);
+  };
+
+  const handleSubtitleChange = (index, field, value) => {
+    const newSubtitles = [...subtitles];
+    newSubtitles[index][field] = value;
+    setSubtitles(newSubtitles);
+  };
 
   useEffect(() => {
     let timeDifference ;
@@ -464,7 +465,6 @@ export default function Admin() {
       </div>
        
     </TabPanel>
-
     <TabPanel value={2}>
         <Tabs aria-label="Blogs tabs" defaultValue={0}>
           <TabList>
@@ -492,39 +492,34 @@ export default function Admin() {
                   className="form-textarea"
                 />
               </div>
+              {subtitles.map((subtitle, index) => (
+                <div key={index}>
+                  <div className="form-group">
+                    <label className="form-label">Enter Subtitle {index + 1}</label>
+                    <input
+                      type="text"
+                      value={subtitle.title}
+                      onChange={(e) => handleSubtitleChange(index, 'title', e.target.value)}
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Enter Subtitle {index + 1} Description</label>
+                    <textarea
+                      value={subtitle.description}
+                      onChange={(e) => handleSubtitleChange(index, 'description', e.target.value)}
+                      className="form-textarea"
+                    />
+                  </div>
+                </div>
+              ))}
               <div className="form-group">
-                <label className="form-label">Enter Subtitle 1</label>
-                <input
-                  type="text"
-                  value={Subtitle1}
-                  onChange={(e) => setSubtitle1(e.target.value)}
-                  className="form-input"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Enter Subtitle 1 Description</label>
-                <textarea
-                  value={SubtitleDescription1}
-                  onChange={(e) => setSubtitleDescription1(e.target.value)}
-                  className="form-textarea"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Enter Subtitle 2</label>
-                <input
-                  type="text"
-                  value={Subtitle2}
-                  onChange={(e) => setSubtitle2(e.target.value)}
-                  className="form-input"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Enter Subtitle 2 Description</label>
-                <textarea
-                  value={SubtitleDescription2}
-                  onChange={(e) => setSubtitleDescription2(e.target.value)}
-                  className="form-textarea"
-                />
+                <button
+                  className="form-button"
+                  onClick={addSubtitle}
+                >
+                  Add Subtitle
+                </button>
               </div>
               <div className="form-group">
                 <label htmlFor="image" className="form-label">Upload Image</label>
@@ -549,22 +544,22 @@ export default function Admin() {
             </div>
           </TabPanel>
           <TabPanel value={1}>
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-              {blogPosts.map((post) => (
-                <div key={post.id} className='p-4 border rounded-lg shadow-md'>
-                  <div style={{ width: '100%', height: '10rem', backgroundColor: '#E5E7EB', borderRadius: '0.375rem', overflow: 'hidden' }}>
-                    <img src={post.imageURL} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+                {blogPosts.map((post) => (
+                  <div key={post.id} style={{ padding: '16px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+                    <div style={{ width: '100%', height: '200px', backgroundColor: '#e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
+                      <img src={post.imageURL} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: '8px' }}>{post.title}</h3>
+                    <button
+                      onClick={() => deleteBlogPost(post.id)}
+                      style={{ backgroundColor: 'red', color: 'white', padding: '8px', borderRadius: '4px', marginTop: '8px', border: 'none', cursor: 'pointer' }}
+                    >
+                      Delete
+                    </button>
                   </div>
-                  <h3 className='text-xl font-semibold mt-2'>{post.title}</h3>
-                  <button
-                    onClick={() => deleteBlogPost(post.id)}
-                    className='delete-button' // Apply the CSS class here
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
           </TabPanel>
         </Tabs>
       </TabPanel>
