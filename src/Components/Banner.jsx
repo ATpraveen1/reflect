@@ -60,7 +60,7 @@ const Banner = () => {
     : {};
 
   const tabletStyles = {
-    '@media (max-width: 768px)': {
+    '@media (maxWidth: 768px)': {
       '.text-4xl': {
         fontSize: '3rem', 
       },
