@@ -49,8 +49,7 @@ function App() {
         <BrowserRouter>
           <div className="font-gilroy font-medium text-gray text-lg leading-[27px]">
             <Routes>
-              <Route path="/" element={<Navigate to={"/home"} />} />
-              <Route path="/home" element={<HomeOne />} />
+              <Route path="/" element={<HomeOne />} />
               <Route path="/skin" element={<Skin />} />
               <Route path="/hair" element={<Hair />} />
               <Route path="/body" element={<Body />} />

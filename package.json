@@ -1,5 +1,5 @@
 {
-  "name": "edumim",
+  "name": "reflect-activetheory",
   "version": "0.1.0",
   "dependencies": {
     "@emailjs/browser": "^3.10.0",
@@ -24,11 +24,13 @@
     "react-compare-slider": "^3.0.1",
     "react-dom": "^18.2.0",
     "react-fullscreen-image": "^0.0.3",
+    "react-helmet": "^6.1.0",
     "react-icons": "^4.12.0",
     "react-image-comparison-slider": "^1.8.4",
     "react-router-dom": "^6.5.0",
     "react-scripts": "5.0.1",
     "react-youtube-player": "^2.0.1",
+    "sitemap": "^8.0.0",
     "swiper": "^8.4.7",
     "web-vitals": "^2.1.4"
   },
