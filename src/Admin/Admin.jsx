@@ -12,7 +12,7 @@ import YoutubePlayer from 'react-youtube-player';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { upload } from '@testing-library/user-event/dist/upload';
-import { FaCloudUploadAlt, FaBold, FaHeading, FaItalic, FaListOl, FaListUl, FaQuoteLeft, FaRedo, FaStrikethrough, FaUnderline, FaUndo } from "react-icons/fa";
+import { FaLevelDownAlt, FaCloudUploadAlt, FaBold, FaHeading, FaItalic, FaListOl, FaListUl, FaQuoteLeft, FaRedo, FaStrikethrough, FaUnderline, FaUndo } from "react-icons/fa";
 import { v4 as uuidv4 } from 'uuid';
 import './styleadmin.css';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -89,6 +89,12 @@ const MenuBar = ({ editor }) => {
           className={editor.isActive("blockquote") ? "is_active" : ""}
         >
           <FaQuoteLeft />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setHardBreak().run()}
+          className=""
+        >
+          <FaLevelDownAlt />
         </button>
       </div>
       <div>
@@ -591,8 +597,8 @@ export default function Admin() {
             <Tiptap setDescription={setBlogSubDescription} />
           </div>
           <div className="form-group">
-            <label className="form-label">Display Blog Content</label>
-            <div className="ProseMirror">{parse(BlogSubDescription)}</div>
+            <label className="form-label">Preview</label>
+            <div className="box">{parse(BlogSubDescription)}</div>
           </div>
           <div className="form-group">
             <label htmlFor="image" className="form-label">Upload Image</label>
