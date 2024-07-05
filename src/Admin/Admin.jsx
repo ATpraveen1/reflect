@@ -7,16 +7,120 @@ import { storage, db, storageRef } from '../config/Firebase'
 import { collection, addDoc, getDocs, deleteDoc, updateDoc , doc, onSnapshot  } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Button } from '@mui/material';
-import { FaCloudUploadAlt } from "react-icons/fa";
+// import { FaCloudUploadAlt } from "react-icons/fa";
 import YoutubePlayer from 'react-youtube-player';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { upload } from '@testing-library/user-event/dist/upload';
+import { FaCloudUploadAlt, FaBold, FaHeading, FaItalic, FaListOl, FaListUl, FaQuoteLeft, FaRedo, FaStrikethrough, FaUnderline, FaUndo } from "react-icons/fa";
 import { v4 as uuidv4 } from 'uuid';
-import './styleadmin.css'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import './styleadmin.css';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import parse from "html-react-parser";
 
+const MenuBar = ({ editor }) => {
+  if (!editor) {
+    return null;
+  }
+
+  return (
+    <div className="menuBar">
+      <div>
+        <button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={editor.isActive("bold") ? "is_active" : ""}
+        >
+          <FaBold />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={editor.isActive("italic") ? "is_active" : ""}
+        >
+          <FaItalic />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={editor.isActive("underline") ? "is_active" : ""}
+        >
+          <FaUnderline />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={editor.isActive("strike") ? "is_active" : ""}
+        >
+          <FaStrikethrough />
+        </button>
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
+          className={
+            editor.isActive("heading", { level: 2 }) ? "is_active" : ""
+          }
+        >
+          <FaHeading />
+        </button>
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
+          className={
+            editor.isActive("heading", { level: 3 }) ? "is_active" : ""
+          }
+        >
+          <FaHeading className="heading3" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={editor.isActive("bulletList") ? "is_active" : ""}
+        >
+          <FaListUl />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={editor.isActive("orderedList") ? "is_active" : ""}
+        >
+          <FaListOl />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          className={editor.isActive("blockquote") ? "is_active" : ""}
+        >
+          <FaQuoteLeft />
+        </button>
+      </div>
+      <div>
+        <button onClick={() => editor.chain().focus().undo().run()}>
+          <FaUndo />
+        </button>
+        <button onClick={() => editor.chain().focus().redo().run()}>
+          <FaRedo />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const Tiptap = ({ setDescription }) => {
+  const editor = useEditor({
+    extensions: [StarterKit, Underline],
+    content: ``,
+
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML();
+      setDescription(html);
+    },
+  });
+
+  return (
+    <div className="textEditor">
+      <MenuBar editor={editor} />
+      <EditorContent editor={editor} />
+    </div>
+  );
+};
 
 
 export default function Admin() {
@@ -47,19 +151,18 @@ export default function Admin() {
   const [imageURL, setImageURL] = useState('');
   const [BlogTitle, setBlogTitle] = useState('');
   const [BlogDescription, setBlogDescription] = useState('');
-  const [subtitles, setSubtitles] = useState([{ content: '' }]);
+  const [BlogSubDescription, setBlogSubDescription] = useState('');
   const [blogPosts, setBlogPosts] = useState([]);
 
   const blogPostsCollection = collection(db, "blogs");
 
   const BlogSubmit = async () => {
-    if (!BlogImageUpload || !BlogTitle || !BlogDescription || subtitles.some(sub => !sub.content)) {
+    if (!BlogImageUpload || !BlogTitle || !BlogDescription || !BlogSubDescription) {
       alert("Please fill in all fields and select an image.");
       return;
     }
 
     const imageRef = ref(storage, `blogs/${BlogImageUpload.name + uuidv4()}`);
-
     try {
       const snapshot = await uploadBytes(imageRef, BlogImageUpload);
       const url = await getDownloadURL(snapshot.ref);
@@ -68,21 +171,19 @@ export default function Admin() {
       const blogPost = {
         title: BlogTitle,
         description: BlogDescription,
+        subDescription: BlogSubDescription,
         imageURL: url,
-        subtitles: subtitles
       };
 
       await addDoc(blogPostsCollection, blogPost);
       alert("Blog has been created and image uploaded");
-
-      // Reset form fields
+      console.log(blogPost);
       setBlogImageUpload(null);
       setImageURL('');
       setBlogTitle('');
       setBlogDescription('');
-      setSubtitles([{ content: '' }]);
+      setBlogSubDescription('');
 
-      // Update the blog posts list after submission
       fetchBlogPosts();
     } catch (error) {
       console.error("Error creating blog post:", error);
@@ -95,7 +196,6 @@ export default function Admin() {
       const querySnapshot = await getDocs(blogPostsCollection);
       const posts = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setBlogPosts(posts);
-      console.log('Fetched Blog Posts:', posts); // Console log the fetched data
     } catch (error) {
       console.error("Error fetching blog posts:", error);
     }
@@ -113,23 +213,6 @@ export default function Admin() {
   useEffect(() => {
     fetchBlogPosts();
   }, []);
-
-  const addSubtitle = () => {
-    setSubtitles([...subtitles, { content: '' }]);
-  };
-
-  const deleteSubtitle = (index) => {
-    const newSubtitles = [...subtitles];
-    newSubtitles.splice(index, 1);
-    setSubtitles(newSubtitles);
-  };
-
-  const handleSubtitleChange = (index, value) => {
-    const newSubtitles = [...subtitles];
-    newSubtitles[index].content = value;
-    setSubtitles(newSubtitles);
-  };
-
 
   useEffect(() => {
     let timeDifference ;
@@ -477,99 +560,78 @@ export default function Admin() {
     </TabPanel>
     
     <TabPanel value={2}>
-      <Tabs aria-label="Blogs tabs" defaultValue={0}>
-        <TabList>
-          <Tab>Create Blog</Tab>
-          <Tab>Blogs List</Tab>
-        </TabList>
-        <TabPanel value={0}>
-          <div className='text-2xl p-5'>Create Blog</div>
-
-          <div className='px-5'>
-            <div className="form-group">
-              <label className="form-label">Enter Title</label>
-              <input
-                type="text"
-                value={BlogTitle}
-                onChange={(e) => setBlogTitle(e.target.value)}
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Enter Description</label>
-              <ReactQuill
-                value={BlogDescription}
-                onChange={setBlogDescription}
-                className="form-textarea"
-              />
-            </div>
-            {subtitles.map((subtitle, index) => (
-              <div key={index}>
-                <div className="form-group">
-                  <label className="form-label">Enter Subtitle {index + 1}</label>
-                  <ReactQuill
-                    value={subtitle.content}
-                    onChange={(value) => handleSubtitleChange(index, value)}
-                    className="form-input"
-                  />
-                </div>
-                <button
-                  onClick={() => deleteSubtitle(index)}
-                  style={{ backgroundColor: 'red', color: 'white', padding: '8px', borderRadius: '4px', marginBottom: '8px', border: 'none', cursor: 'pointer' }}
-                >
-                  Delete Subtitle
-                </button>
+    <Tabs aria-label="Blogs tabs" defaultValue={0}>
+      <TabList>
+        <Tab>Create Blog</Tab>
+        <Tab>Blogs List</Tab>
+      </TabList>
+      <TabPanel value={0}>
+        <div className='text-2xl p-5'>Create Blog</div>
+        <div className='px-5'>
+          <div className="form-group">
+            <label className="form-label">Title</label>
+            <input
+              type="text"
+              value={BlogTitle}
+              onChange={(e) => setBlogTitle(e.target.value)}
+              className="form-input"
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Description</label>
+            <input
+              type="text"
+              value={BlogDescription}
+              onChange={(e) => setBlogDescription(e.target.value)}
+              className="form-input"
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Content</label>
+            <Tiptap setDescription={setBlogSubDescription} />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Display Blog Content</label>
+            <div className="ProseMirror">{parse(BlogSubDescription)}</div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="image" className="form-label">Upload Image</label>
+            <input
+              id="image"
+              type="file"
+              style={{ display: "none" }}
+              onChange={(e) => setBlogImageUpload(e.target.files[0])}
+            />
+            <label htmlFor="image" className="form-upload">
+              <FaCloudUploadAlt className="upload-icon" /> Upload file
+            </label>
+          </div>
+          <div className="form-group">
+            <button className="form-button" onClick={BlogSubmit}>
+              Create Blog
+            </button>
+          </div>
+        </div>
+      </TabPanel>
+      <TabPanel value={1}>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+          {blogPosts.map((post) => (
+            <div key={post.id} style={{ padding: '16px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+              <div style={{ width: '100%', height: '200px', backgroundColor: '#e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
+                <img src={post.imageURL} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
-            ))}
-            <div className="form-group">
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: '8px' }}>{post.title}</h3>
               <button
-                className="form-button"
-                onClick={addSubtitle}
+                onClick={() => deleteBlogPost(post.id)}
+                style={{ backgroundColor: 'red', color: 'white', padding: '8px', borderRadius: '4px', marginTop: '8px', border: 'none', cursor: 'pointer' }}
               >
-                Add Subtitle
+                Delete
               </button>
             </div>
-            <div className="form-group">
-              <label htmlFor="image" className="form-label">Upload Image</label>
-              <input
-                id="image"
-                type="file"
-                style={{ display: "none" }}
-                onChange={(e) => setBlogImageUpload(e.target.files[0])}
-              />
-              <label htmlFor="image" className="form-upload">
-                <FaCloudUploadAlt className="upload-icon" /> Upload file
-              </label>
-            </div>
-            <div className="form-group">
-              <button
-                className="form-button"
-                onClick={BlogSubmit}
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </TabPanel>
-        <TabPanel value={1}>
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-            {blogPosts.map((post) => (
-              <div key={post.id} style={{ padding: '16px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
-                <div style={{ width: '100%', height: '200px', backgroundColor: '#e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
-                  <img src={post.imageURL} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: '8px' }}>{post.title}</h3>
-                <button
-                  onClick={() => deleteBlogPost(post.id)}
-                  style={{ backgroundColor: 'red', color: 'white', padding: '8px', borderRadius: '4px', marginTop: '8px', border: 'none', cursor: 'pointer' }}
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
-          </div>
-        </TabPanel>
-      </Tabs>
+          ))}
+        </div>
+      </TabPanel>
+    </Tabs>
     </TabPanel>
 
     {/* <TabPanel value={2}>

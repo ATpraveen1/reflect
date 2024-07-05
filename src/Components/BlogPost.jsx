@@ -6,8 +6,9 @@ import { IoIosCall } from "react-icons/io";
 import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/Firebase';
-import DOMPurify from 'dompurify';
 import HelmetWrapper from '../HelmetWrapper';
+import parse from 'html-react-parser';
+import './BlogPost.css'; // Import the CSS file
 
 const BlogPost = () => {
   const { id } = useParams();
@@ -31,27 +32,21 @@ const BlogPost = () => {
     return <div>Loading...</div>;
   }
 
-  const createMarkup = (html) => {
-    return { __html: DOMPurify.sanitize(html) };
-  };
-
   return (
     <div className="nav-tab-wrapper tabs section-padding">
       <HelmetWrapper
         title={blogPost.title}
-        description="Elevate your beauty with the finest skin and hair care treatments at Reflect Clinic, the trusted clinic in Coimbatore. Book your appointment now!"
+        description={blogPost.description}
       />
       <div className="container">
         <div className="grid grid-cols-12 gap-[30px]">
           <div className="lg:col-span-8 col-span-12 pt-10">
             <div className="bg-[#F8F8F8] rounded-md">
               <img src={blogPost.imageURL} alt={blogPost.title} style={{ width: '100%', height: 'auto', borderRadius: '8px', marginBottom: '16px' }} />
-              <div className="px-10 pb-10">
-                <h3>{blogPost.title}</h3>
-                <div className="mt-6 blog-content" dangerouslySetInnerHTML={createMarkup(blogPost.description)} />
-                {blogPost.subtitles.map((subtitle, index) => (
-                  <div key={index} className="mt-6 blog-content" dangerouslySetInnerHTML={createMarkup(subtitle.content)} />
-                ))}
+              <div className="px-10 pb-10 blog-content"> {/* Add blog-content class here */}
+                <h2>{blogPost.title}</h2>
+                <div>{parse(blogPost.description)}</div>
+                <div>{parse(blogPost.subDescription)}</div>
               </div>
             </div>
           </div>
