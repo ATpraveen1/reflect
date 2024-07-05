@@ -6,10 +6,15 @@ import Header from "../Header";
 import PageBanner from "../PageBanner";
 import contact from "../../assets/images/banner/contact.webp";
 import BookBtn from "../BookBtn";
+import HelmetWrapper from '../../HelmetWrapper';
 
 const ContactUs = () => {
   return (
     <>
+      <HelmetWrapper
+        title="Contact Us - Reflect Clinic"
+        description="Transform your skin and hair with Reflect Clinic's exceptional care. Contact us now to schedule a consultation and experience the difference."
+      />
       <Header />
       <PageBanner image={contact}/>
       <div className="nav-tab-wrapper tabs  section-padding">

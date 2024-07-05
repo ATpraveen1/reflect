@@ -14,11 +14,14 @@ import CardMedia from '@mui/material/CardMedia';
 import { upload } from '@testing-library/user-event/dist/upload';
 import { v4 as uuidv4 } from 'uuid';
 import './styleadmin.css'
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
+
 
 export default function Admin() {
 
   //bookings
-
   const [beforeImage, setBeforeImage] = useState(null);
   const [afterImage, setAfterImage] = useState(null);
   const [title, setTitle] = useState('');
@@ -44,13 +47,13 @@ export default function Admin() {
   const [imageURL, setImageURL] = useState('');
   const [BlogTitle, setBlogTitle] = useState('');
   const [BlogDescription, setBlogDescription] = useState('');
-  const [subtitles, setSubtitles] = useState([{ title: '', description: '' }]);
+  const [subtitles, setSubtitles] = useState([{ content: '' }]);
   const [blogPosts, setBlogPosts] = useState([]);
 
   const blogPostsCollection = collection(db, "blogs");
 
   const BlogSubmit = async () => {
-    if (!BlogImageUpload || !BlogTitle || !BlogDescription || subtitles.some(sub => !sub.title || !sub.description)) {
+    if (!BlogImageUpload || !BlogTitle || !BlogDescription || subtitles.some(sub => !sub.content)) {
       alert("Please fill in all fields and select an image.");
       return;
     }
@@ -77,7 +80,7 @@ export default function Admin() {
       setImageURL('');
       setBlogTitle('');
       setBlogDescription('');
-      setSubtitles([{ title: '', description: '' }]);
+      setSubtitles([{ content: '' }]);
 
       // Update the blog posts list after submission
       fetchBlogPosts();
@@ -112,14 +115,21 @@ export default function Admin() {
   }, []);
 
   const addSubtitle = () => {
-    setSubtitles([...subtitles, { title: '', description: '' }]);
+    setSubtitles([...subtitles, { content: '' }]);
   };
 
-  const handleSubtitleChange = (index, field, value) => {
+  const deleteSubtitle = (index) => {
     const newSubtitles = [...subtitles];
-    newSubtitles[index][field] = value;
+    newSubtitles.splice(index, 1);
     setSubtitles(newSubtitles);
   };
+
+  const handleSubtitleChange = (index, value) => {
+    const newSubtitles = [...subtitles];
+    newSubtitles[index].content = value;
+    setSubtitles(newSubtitles);
+  };
+
 
   useEffect(() => {
     let timeDifference ;
@@ -465,104 +475,102 @@ export default function Admin() {
       </div>
        
     </TabPanel>
+    
     <TabPanel value={2}>
-        <Tabs aria-label="Blogs tabs" defaultValue={0}>
-          <TabList>
-            <Tab>Create Blog</Tab>
-            <Tab>Blogs List</Tab>
-          </TabList>
-          <TabPanel value={0}>
-            <div className='text-2xl p-5'>Create Blog</div>
+      <Tabs aria-label="Blogs tabs" defaultValue={0}>
+        <TabList>
+          <Tab>Create Blog</Tab>
+          <Tab>Blogs List</Tab>
+        </TabList>
+        <TabPanel value={0}>
+          <div className='text-2xl p-5'>Create Blog</div>
 
-            <div className='px-5'>
-              <div className="form-group">
-                <label className="form-label">Enter Title</label>
-                <input
-                  type="text"
-                  value={BlogTitle}
-                  onChange={(e) => setBlogTitle(e.target.value)}
-                  className="form-input"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Enter Description</label>
-                <textarea
-                  value={BlogDescription}
-                  onChange={(e) => setBlogDescription(e.target.value)}
-                  className="form-textarea"
-                />
-              </div>
-              {subtitles.map((subtitle, index) => (
-                <div key={index}>
-                  <div className="form-group">
-                    <label className="form-label">Enter Subtitle {index + 1}</label>
-                    <input
-                      type="text"
-                      value={subtitle.title}
-                      onChange={(e) => handleSubtitleChange(index, 'title', e.target.value)}
-                      className="form-input"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Enter Subtitle {index + 1} Description</label>
-                    <textarea
-                      value={subtitle.description}
-                      onChange={(e) => handleSubtitleChange(index, 'description', e.target.value)}
-                      className="form-textarea"
-                    />
-                  </div>
-                </div>
-              ))}
-              <div className="form-group">
-                <button
-                  className="form-button"
-                  onClick={addSubtitle}
-                >
-                  Add Subtitle
-                </button>
-              </div>
-              <div className="form-group">
-                <label htmlFor="image" className="form-label">Upload Image</label>
-                <input
-                  id="image"
-                  type="file"
-                  style={{ display: "none" }}
-                  onChange={(e) => setBlogImageUpload(e.target.files[0])}
-                />
-                <label htmlFor="image" className="form-upload">
-                  <FaCloudUploadAlt className="upload-icon" /> Upload file
-                </label>
-              </div>
-              <div className="form-group">
-                <button
-                  className="form-button"
-                  onClick={BlogSubmit}
-                >
-                  Add
-                </button>
-              </div>
+          <div className='px-5'>
+            <div className="form-group">
+              <label className="form-label">Enter Title</label>
+              <input
+                type="text"
+                value={BlogTitle}
+                onChange={(e) => setBlogTitle(e.target.value)}
+                className="form-input"
+              />
             </div>
-          </TabPanel>
-          <TabPanel value={1}>
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-                {blogPosts.map((post) => (
-                  <div key={post.id} style={{ padding: '16px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
-                    <div style={{ width: '100%', height: '200px', backgroundColor: '#e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
-                      <img src={post.imageURL} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: '8px' }}>{post.title}</h3>
-                    <button
-                      onClick={() => deleteBlogPost(post.id)}
-                      style={{ backgroundColor: 'red', color: 'white', padding: '8px', borderRadius: '4px', marginTop: '8px', border: 'none', cursor: 'pointer' }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                ))}
+            <div className="form-group">
+              <label className="form-label">Enter Description</label>
+              <ReactQuill
+                value={BlogDescription}
+                onChange={setBlogDescription}
+                className="form-textarea"
+              />
+            </div>
+            {subtitles.map((subtitle, index) => (
+              <div key={index}>
+                <div className="form-group">
+                  <label className="form-label">Enter Subtitle {index + 1}</label>
+                  <ReactQuill
+                    value={subtitle.content}
+                    onChange={(value) => handleSubtitleChange(index, value)}
+                    className="form-input"
+                  />
+                </div>
+                <button
+                  onClick={() => deleteSubtitle(index)}
+                  style={{ backgroundColor: 'red', color: 'white', padding: '8px', borderRadius: '4px', marginBottom: '8px', border: 'none', cursor: 'pointer' }}
+                >
+                  Delete Subtitle
+                </button>
               </div>
-          </TabPanel>
-        </Tabs>
-      </TabPanel>
+            ))}
+            <div className="form-group">
+              <button
+                className="form-button"
+                onClick={addSubtitle}
+              >
+                Add Subtitle
+              </button>
+            </div>
+            <div className="form-group">
+              <label htmlFor="image" className="form-label">Upload Image</label>
+              <input
+                id="image"
+                type="file"
+                style={{ display: "none" }}
+                onChange={(e) => setBlogImageUpload(e.target.files[0])}
+              />
+              <label htmlFor="image" className="form-upload">
+                <FaCloudUploadAlt className="upload-icon" /> Upload file
+              </label>
+            </div>
+            <div className="form-group">
+              <button
+                className="form-button"
+                onClick={BlogSubmit}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </TabPanel>
+        <TabPanel value={1}>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+            {blogPosts.map((post) => (
+              <div key={post.id} style={{ padding: '16px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+                <div style={{ width: '100%', height: '200px', backgroundColor: '#e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
+                  <img src={post.imageURL} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: '8px' }}>{post.title}</h3>
+                <button
+                  onClick={() => deleteBlogPost(post.id)}
+                  style={{ backgroundColor: 'red', color: 'white', padding: '8px', borderRadius: '4px', marginTop: '8px', border: 'none', cursor: 'pointer' }}
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        </TabPanel>
+      </Tabs>
+    </TabPanel>
 
     {/* <TabPanel value={2}>
     <Tabs aria-label="Basic tabs" defaultValue={0}>

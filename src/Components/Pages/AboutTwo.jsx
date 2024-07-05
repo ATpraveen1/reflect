@@ -6,11 +6,16 @@ import Team from "../HomeThreeComponents/Team";
 import image from "../../assets/images/banner/aboutbanner.webp";
 import Topics from "../Topics";
 import { Container } from "@mui/material";
+import HelmetWrapper from '../../HelmetWrapper';
 
 
 const AboutTwo = () => {
   return (
     <>
+      <HelmetWrapper
+        title="About Us | Reflect Clinic "
+        description="Experience the ultimate in skin and hair care at Reflect Clinic. Let our skilled professionals enhance your natural beauty and boost your confidence."
+      />
       <Header />
       <PageBanner image={image} num={2} /> 
       <Team />   

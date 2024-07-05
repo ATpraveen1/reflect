@@ -11,7 +11,7 @@ import { db } from '../config/Firebase'
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
 import { Redirect , Link } from 'react-router-dom';
-
+import HelmetWrapper from '../HelmetWrapper';
 
 
 export default function Login() {
@@ -63,6 +63,10 @@ export default function Login() {
 
   return (
     <CssVarsProvider>
+      <HelmetWrapper
+        title="Login - Reflect Skin & Hair Clinic"
+        description="Reflect Skin and Hair Clinic, located in Coimbatore, is a premier dermatology and trichology center dedicated to providing advanced skin and hair care solutions. The clinic is renowned for its state-of-the-art facilities and a team of experienced dermatologists and trichologists who offer personalized treatments for various skin and hair conditions. Services at Reflect Skin and Hair Clinic include acne treatment, anti-aging solutions, hair restoration, laser hair removal, and other cosmetic dermatology procedures. With a focus on utilizing the latest technology and evidence-based practices, the clinic aims to deliver effective and safe outcomes for all its clients, ensuring they achieve optimal skin and hair health."
+      />
       <main style={{display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh"}}>
         <Sheet
           sx={{

@@ -48,6 +48,7 @@ function App() {
       <Suspense fallback={<Loading />}>
         <BrowserRouter>
           <div className="font-gilroy font-medium text-gray text-lg leading-[27px]">
+             {/* Add the CanonicalUrl component here */}
             <Routes>
               <Route path="/" element={<HomeOne />} />
               <Route path="/skin" element={<Skin />} />
