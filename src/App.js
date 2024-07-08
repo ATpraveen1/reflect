@@ -78,7 +78,7 @@ function App() {
 
               <Route path="/about" element={<AboutTwo />} />
               <Route path="/contact" element={<ContactUs />} />
-
+              
               <Route
                 path="/:category"
                 element={<EventSingle />}

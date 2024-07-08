@@ -19,12 +19,12 @@ const Footer = () => {
               <ul className="flex space-x-4 pt-8">
                 <li>
                   <a
-                    aria-label="Facebook Icon"
+                    aria-label="Youtube Icon"
                     href="https://youtube.com/@drkrishnameera?si=EHAHE5uAo0J7zv-X"
                     className="flex h-12 w-12 flex-col items-center justify-center rounded bg-white bg-opacity-[0.08] text-2xl text-white
                   transition hover:bg-primary hover:text-white"
                   >
-                    <iconify-icon icon="bxl:facebook"></iconify-icon>
+                    <iconify-icon icon="bxl:youtube"></iconify-icon>
                   </a>
                 </li>
                 {/* <li>

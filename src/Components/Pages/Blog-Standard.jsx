@@ -32,11 +32,11 @@ const BlogStandard = () => {
 
   return (
     <>
+      <Header />
       <HelmetWrapper
         title="Blogs | Reflect Clinic"
         description="Elevate your beauty with the finest skin and hair care treatments at Reflect Clinic, the trusted clinic in Coimbatore. Book your appointment now!"
       />
-      <Header />
       <PageBanner image={image} />
       <div className="nav-tab-wrapper tabs section-padding">
         <div className="container">
