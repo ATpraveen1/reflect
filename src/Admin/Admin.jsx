@@ -12,13 +12,14 @@ import YoutubePlayer from 'react-youtube-player';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { upload } from '@testing-library/user-event/dist/upload';
-import { FaLevelDownAlt, FaCloudUploadAlt, FaBold, FaHeading, FaItalic, FaListOl, FaListUl, FaQuoteLeft, FaRedo, FaStrikethrough, FaUnderline, FaUndo } from "react-icons/fa";
+import { FaLevelDownAlt, FaCloudUploadAlt, FaBold, FaLink, FaItalic, FaListOl, FaListUl, FaQuoteLeft, FaRedo, FaStrikethrough, FaUnderline, FaUndo } from "react-icons/fa";
 import { v4 as uuidv4 } from 'uuid';
 import './styleadmin.css';
+import parse, { domToReact } from 'html-react-parser';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
-import parse from "html-react-parser";
+import Link from '@tiptap/extension-link';
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -54,13 +55,23 @@ const MenuBar = ({ editor }) => {
         </button>
         <button
           onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
+          className={
+            editor.isActive("heading", { level: 1 }) ? "is_active" : ""
+          }
+        >
+          <strong>H1</strong>
+        </button>
+        <button
+          onClick={() =>
             editor.chain().focus().toggleHeading({ level: 2 }).run()
           }
           className={
             editor.isActive("heading", { level: 2 }) ? "is_active" : ""
           }
         >
-          <FaHeading />
+          <strong>H2</strong>
         </button>
         <button
           onClick={() =>
@@ -70,7 +81,7 @@ const MenuBar = ({ editor }) => {
             editor.isActive("heading", { level: 3 }) ? "is_active" : ""
           }
         >
-          <FaHeading className="heading3" />
+          <strong>H3</strong>
         </button>
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -112,7 +123,7 @@ const MenuBar = ({ editor }) => {
 const Tiptap = ({ setDescription }) => {
   const editor = useEditor({
     extensions: [StarterKit, Underline],
-    content: ``,
+    content: '',
 
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
@@ -127,7 +138,6 @@ const Tiptap = ({ setDescription }) => {
     </div>
   );
 };
-
 
 export default function Admin() {
 
@@ -158,13 +168,40 @@ export default function Admin() {
   const [BlogTitle, setBlogTitle] = useState('');
   const [BlogDescription, setBlogDescription] = useState('');
   const [BlogSubDescription, setBlogSubDescription] = useState('');
+  const [BlogDate, setBlogDate] = useState(new Date().toISOString().split('T')[0]);
+  const [BlogName, setBlogName] = useState('');
+  const [blogNameError, setBlogNameError] = useState('');
   const [blogPosts, setBlogPosts] = useState([]);
 
   const blogPostsCollection = collection(db, "blogs");
 
+  const handleBlogNameChange = async (e) => {
+    const name = e.target.value;
+    setBlogName(name);
+
+    // Check for duplicate blog names
+    try {
+      const querySnapshot = await getDocs(blogPostsCollection);
+      const existingBlogNames = querySnapshot.docs.map((doc) => doc.data().name);
+
+      if (existingBlogNames.includes(name)) {
+        setBlogNameError("A blog with this name already exists.");
+      } else {
+        setBlogNameError("");
+      }
+    } catch (error) {
+      console.error("Error checking for duplicate blog names:", error);
+    }
+  };
+
   const BlogSubmit = async () => {
-    if (!BlogImageUpload || !BlogTitle || !BlogDescription || !BlogSubDescription) {
+    if (!BlogImageUpload || !BlogTitle || !BlogDescription || !BlogSubDescription || !BlogDate || !BlogName) {
       alert("Please fill in all fields and select an image.");
+      return;
+    }
+
+    if (blogNameError) {
+      alert(blogNameError);
       return;
     }
 
@@ -175,10 +212,12 @@ export default function Admin() {
       setImageURL(url);
 
       const blogPost = {
+        name: BlogName,
         title: BlogTitle,
         description: BlogDescription,
         subDescription: BlogSubDescription,
         imageURL: url,
+        date: BlogDate,
       };
 
       await addDoc(blogPostsCollection, blogPost);
@@ -189,6 +228,8 @@ export default function Admin() {
       setBlogTitle('');
       setBlogDescription('');
       setBlogSubDescription('');
+      setBlogDate(new Date().toISOString().split('T')[0]);
+      setBlogName('');
 
       fetchBlogPosts();
     } catch (error) {
@@ -601,6 +642,25 @@ export default function Admin() {
             <div className="box">{parse(BlogSubDescription)}</div>
           </div>
           <div className="form-group">
+            <label className="form-label">Date</label>
+            <input
+              type="date"
+              value={BlogDate}
+              onChange={(e) => setBlogDate(e.target.value)}
+              className="form-input"
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Blog Name</label>
+            <input
+              type="text"
+              value={BlogName}
+              onChange={handleBlogNameChange}
+              className="form-input"
+            />
+            {blogNameError && <p className="error-message">{blogNameError}</p>}
+          </div>
+          <div className="form-group">
             <label htmlFor="image" className="form-label">Upload Image</label>
             <input
               id="image"
@@ -627,6 +687,8 @@ export default function Admin() {
                 <img src={post.imageURL} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: '8px' }}>{post.title}</h3>
+              <p style={{ marginTop: '8px', color: '#555' }}>{post.description}</p>
+              <p style={{ marginTop: '4px', color: '#777', fontSize: '0.875rem' }}>{post.date}</p>
               <button
                 onClick={() => deleteBlogPost(post.id)}
                 style={{ backgroundColor: 'red', color: 'white', padding: '8px', borderRadius: '4px', marginTop: '8px', border: 'none', cursor: 'pointer' }}
