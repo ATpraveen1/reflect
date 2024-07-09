@@ -26,7 +26,7 @@ const Banner = () => {
   }, []);
 
   const mobileStyles = isMobile ? {
-    position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', fontWeight: 'bold', fontSize: '1.4rem'
+    position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', fontWeight: 'bold', fontSize: '1.8rem'
   } : {};
 
   // const tabletStyles = window.innerWidth <= 768 ? {
