@@ -3,49 +3,81 @@ import { AiFillClockCircle } from "react-icons/ai";
 import { MdLocationPin } from "react-icons/md";
 import { HiMail } from "react-icons/hi";
 import { IoIosCall } from "react-icons/io";
-import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/Firebase';
 import HelmetWrapper from '../HelmetWrapper';
+import { getDocs, collection } from 'firebase/firestore';
 import parse from 'html-react-parser';
-import './BlogPost.css'; // Import the CSS file
+import './BlogPost.css'; 
+import { useParams } from 'react-router-dom';
 
 const BlogPost = () => {
-  const { id } = useParams();
-  const [blogPost, setBlogPost] = useState(null);
+  // const { id } = useParams();
+  // const [blogPost, setBlogPost] = useState(null);
 
-  useEffect(() => {
-    const fetchBlogPost = async () => {
-      const blogDoc = doc(db, "blogs", id);
-      const blogData = await getDoc(blogDoc);
-      if (blogData.exists()) {
-        setBlogPost(blogData.data());
-      } else {
-        console.error("No such blog post!");
-      }
-    };
+  // useEffect(() => {
+  //   const fetchBlogPost = async () => {
+  //     const blogDoc = doc(db, "blogs", id);
+  //     const blogData = await getDoc(blogDoc);
+  //     if (blogData.exists()) {
+  //       setBlogPost(blogData.data());
+  //     } else {
+  //       console.error("No such blog post!");
+  //     }
+  //   };
 
-    fetchBlogPost();
-  }, [id]);
+  //   fetchBlogPost();
+  // }, [id]);
 
-  if (!blogPost) {
-    return <div>Loading...</div>;
+// /blogs/id1
+const { name1 } = useParams();
+const [blogPost, setBlogPost] = useState(null);
+const [loading, setLoading] = useState(true);
+
+const fetchBlogPosts = async () => {
+  try {
+    const blogPostsCollection = collection(db, "blogs");
+    const querySnapshot = await getDocs(blogPostsCollection);
+    const posts = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const filteredPost = posts.find(post => post.name === name1);
+    setBlogPost(filteredPost);
+    setLoading(false);
+  } catch (error) {
+    console.error("Error fetching blog posts:", error);
+    setLoading(false);
   }
+};
+
+useEffect(() => {
+  fetchBlogPosts();
+}, [name1]);
+
+if (loading) {
+  return <div>Loading...</div>;
+}
+
+if (!blogPost) {
+  return <div>Blog post not found.</div>;
+}
 
   return (
     <div className="nav-tab-wrapper tabs section-padding">
       <HelmetWrapper
-        title={blogPost.title}
+        title={`${blogPost.title} | Reflect Clinic`}
         description={blogPost.description}
       />
       <div className="container">
         <div className="grid grid-cols-12 gap-[30px]">
           <div className="lg:col-span-8 col-span-12 pt-10">
             <div className="bg-[#F8F8F8] rounded-md">
-              <img src={blogPost.imageURL} alt={blogPost.title} style={{ width: '100%', height: 'auto', borderRadius: '8px', marginBottom: '16px' }} />
-              <div className="px-10 pb-10 blog-content"> {/* Add blog-content class here */}
+              <img 
+                src={blogPost.imageURL} 
+                alt={blogPost.title} 
+                style={{ width: '100%', height: 'auto', borderRadius: '8px', marginBottom: '16px' }} 
+              />
+              <div className="px-10 pb-10 blog-content"> 
                 <h2>{blogPost.title}</h2>
-                <div>{parse(blogPost.description)}</div>
+                <div>{blogPost.description}</div>
                 <div>{parse(blogPost.subDescription)}</div>
               </div>
             </div>

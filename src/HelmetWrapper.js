@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 
 const HelmetWrapper = ({ title, description }) => {
   // Log title for debugging purposes (optional)
-  console.log("Current title:", title);
+  // console.log("Current title:", title);
 
   return (
     <Helmet>

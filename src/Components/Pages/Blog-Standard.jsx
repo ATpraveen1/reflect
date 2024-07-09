@@ -43,9 +43,9 @@ const BlogStandard = () => {
           <div className="grid grid-cols-12 gap-[30px]">
             <div className="lg:col-span-8 col-span-12">
               <div className="grid grid-cols-1 gap-[30px]">
-                {blogPosts.map((post) => (
+              {blogPosts.map((post) => (
                   <div key={post.id} className="bg-white shadow-box12 rounded-[8px] transition duration-100 hover:shadow-box13">
-                    <Link to={`/blog/${post.id}`}>
+                    <Link to={`/blog/${post.name}`}>
                       <div className="course-thumb h-[420px] rounded-t-[8px] relative">
                         <img
                           src={post.imageURL}
@@ -54,15 +54,16 @@ const BlogStandard = () => {
                         />
                       </div>
                       <div className="course-content p-8">
-                        <h3 className="mb-4 mt-4">
+                        <h3 className="mt-4">
                           <Link
-                            to={`/blog/${post.id}`}
+                            to={`/blog/${post.name}`}
                             className="hover:text-primary transition duration-150"
                           >
                             {post.title}
                           </Link>
                         </h3>
-                        {/* <div dangerouslySetInnerHTML={{ __html: post.description }} /> */}
+                        <p>{post.description}</p>
+                        <p>{post.date}</p>
                       </div>
                     </Link>
                   </div>
