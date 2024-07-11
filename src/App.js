@@ -9,7 +9,7 @@ const AboutTwo = lazy(() => import("./Components/Pages/AboutTwo"));
 const ContactUs = lazy(() => import("./Components/Pages/ContactUs"));
 const EventSingle = lazy(() => import("./Components/Pages/EventSingle"));
 const Blogs = lazy(() => import("./Components/Pages/SingleBlog"));
-const BlogsList = lazy(() => import("./Components/Pages/BlogList"));
+const BlogsList = lazy(() => import("./Components/Pages/Blog-Standard"));
 const Skin = lazy(() => import("./Components/Pages/Skin"));
 const Hair = lazy(() => import("./Components/Pages/Hair"));
 const Body = lazy(() => import("./Components/Pages/Body"));
@@ -40,7 +40,6 @@ function App() {
     }
   };
 
-  // Initialize state with a fallback value
   const [isloggedon, setIsloggedon] = useState(() => parseStoredToken(storedTokenString));
 
   return (
@@ -49,14 +48,13 @@ function App() {
         <BrowserRouter>
           <div className="font-gilroy font-medium text-gray text-lg leading-[27px]">
             <Routes>
-              <Route path="/" element={<Navigate to={"/home"} />} />
-              <Route path="/home" element={<HomeOne />} />
+              <Route path="/" element={<HomeOne />} />
               <Route path="/skin" element={<Skin />} />
               <Route path="/hair" element={<Hair />} />
               <Route path="/body" element={<Body />} />
               <Route path="/nail" element={<Nail />} />
               <Route path="/blogs" element={<BlogsList />} />
-              <Route path="/blog/:id" element={<Blogs />} />
+              <Route path="/blog/:name1" element={<Blogs />} />
               <Route path="/medicalprocedure" element={<Medi />} />
               <Route path="/aestheticprocedure" element={<Aest />} />
               <Route path="/:cardId" element={<EventSingle />} />
@@ -78,7 +76,7 @@ function App() {
 
               <Route path="/about" element={<AboutTwo />} />
               <Route path="/contact" element={<ContactUs />} />
-
+              
               <Route
                 path="/:category"
                 element={<EventSingle />}

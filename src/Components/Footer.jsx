@@ -19,15 +19,15 @@ const Footer = () => {
               <ul className="flex space-x-4 pt-8">
                 <li>
                   <a
-                    aria-label="Facebook Icon"
-                    href="#"
+                    aria-label="Youtube Icon"
+                    href="https://youtube.com/@drkrishnameera?si=EHAHE5uAo0J7zv-X"
                     className="flex h-12 w-12 flex-col items-center justify-center rounded bg-white bg-opacity-[0.08] text-2xl text-white
                   transition hover:bg-primary hover:text-white"
                   >
-                    <iconify-icon icon="bxl:facebook"></iconify-icon>
+                    <iconify-icon icon="bxl:youtube"></iconify-icon>
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     aria-label="Twitter icon"
                     href="#"
@@ -36,8 +36,8 @@ const Footer = () => {
                   >
                     <iconify-icon icon="bxl:twitter"></iconify-icon>
                   </a>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <a
                   aria-label="Linkedin icon"
                     href="#"
@@ -46,11 +46,11 @@ const Footer = () => {
                   >
                     <iconify-icon icon="bxl:linkedin"></iconify-icon>
                   </a>
-                </li>
+                </li> */}
                 <li>
                   <a
                     aria-label="Instagram icon"
-                    href="#"
+                    href="https://www.instagram.com/drkrishnameera?igsh=MWQ0bXp0M2EzdzhmcQ=="
                     className="flex h-12 w-12 flex-col items-center justify-center rounded bg-white bg-opacity-[0.08] text-2xl text-white
                   transition hover:bg-primary hover:text-white"
                   >
