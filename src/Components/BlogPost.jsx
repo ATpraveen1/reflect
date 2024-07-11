@@ -12,53 +12,35 @@ import './BlogPost.css';
 import { useParams } from 'react-router-dom';
 
 const BlogPost = () => {
-  // const { id } = useParams();
-  // const [blogPost, setBlogPost] = useState(null);
+  const { name1 } = useParams();
+  const [blogPost, setBlogPost] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const fetchBlogPost = async () => {
-  //     const blogDoc = doc(db, "blogs", id);
-  //     const blogData = await getDoc(blogDoc);
-  //     if (blogData.exists()) {
-  //       setBlogPost(blogData.data());
-  //     } else {
-  //       console.error("No such blog post!");
-  //     }
-  //   };
+  const fetchBlogPosts = async () => {
+    try {
+      const blogPostsCollection = collection(db, "blogs");
+      const querySnapshot = await getDocs(blogPostsCollection);
+      const posts = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const filteredPost = posts.find(post => post.name === name1 && post.published); // Only get published post
+      setBlogPost(filteredPost);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching blog posts:", error);
+      setLoading(false);
+    }
+  };
 
-  //   fetchBlogPost();
-  // }, [id]);
+  useEffect(() => {
+    fetchBlogPosts();
+  }, [name1]);
 
-// /blogs/id1
-const { name1 } = useParams();
-const [blogPost, setBlogPost] = useState(null);
-const [loading, setLoading] = useState(true);
-
-const fetchBlogPosts = async () => {
-  try {
-    const blogPostsCollection = collection(db, "blogs");
-    const querySnapshot = await getDocs(blogPostsCollection);
-    const posts = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    const filteredPost = posts.find(post => post.name === name1);
-    setBlogPost(filteredPost);
-    setLoading(false);
-  } catch (error) {
-    console.error("Error fetching blog posts:", error);
-    setLoading(false);
+  if (loading) {
+    return <div>Loading...</div>;
   }
-};
 
-useEffect(() => {
-  fetchBlogPosts();
-}, [name1]);
-
-if (loading) {
-  return <div>Loading...</div>;
-}
-
-if (!blogPost) {
-  return <div>Blog post not found.</div>;
-}
+  if (!blogPost) {
+    return <div>Blog post not found.</div>;
+  }
 
   return (
     <div className="nav-tab-wrapper tabs section-padding">
@@ -81,6 +63,9 @@ if (!blogPost) {
                 <div>{parse(blogPost.subDescription)}</div>
               </div>
             </div>
+            <a href="/contact" className="btn font-bold btn-primary mt-4 py-3 px-8 lg:px-10 lg:text-lg lg:py-4">
+              Book Appointment
+            </a>
           </div>
           <div className="lg:col-span-4 col-span-12 pt-20">
             <div className="sidebarWrapper space-y-[30px]">

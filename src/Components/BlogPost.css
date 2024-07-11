@@ -20,6 +20,17 @@
   padding: 0;
 }
 
+/* CSS for hyperlinks */
+.blog-content a {
+  color: blue; /* Link color */
+  text-decoration: underline; /* Underline for links */
+}
+
+.blog-content a:hover {
+  color: darkblue; /* Hover color for links */
+  text-decoration: underline; /* Underline on hover */
+}
+
 .blog-content h2, .blog-content h3 {
   margin-top: 20px;
   margin-bottom: 10px;

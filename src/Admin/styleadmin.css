@@ -12,7 +12,8 @@ body {
   margin-bottom: 0.5rem;
 }
 
-.form-input, .form-textarea {
+.form-input,
+.form-textarea {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
@@ -34,8 +35,8 @@ body {
   margin-right: 0.5rem;
 }
 
-.form-button {
-  background-color: green;
+.form-button,
+.form-button1 {
   color: white;
   font-weight: bold;
   padding: 0.5rem 1rem;
@@ -45,11 +46,22 @@ body {
   transition: background-color 0.3s ease;
 }
 
+.form-button {
+  background-color: green;
+}
+
 .form-button:hover {
   background-color: darkgreen;
 }
 
-/* CSS for delete button */
+.form-button1 {
+  background-color: blue;
+}
+
+.form-button1:hover {
+  background-color: darkblue;
+}
+
 .delete-button {
   background-color: red;
   color: white;
@@ -61,6 +73,10 @@ body {
   transition: background-color 0.3s ease;
 }
 
+.delete-button:hover {
+  background-color: darkred;
+}
+
 .box {
   padding: 20px;
   border: 1px black solid;
@@ -68,9 +84,17 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.delete-button:hover {
-  background-color: darkred;
+/* CSS for hyperlinks */
+.box a {
+  color: blue; /* Link color */
+  text-decoration: underline; /* Underline for links */
 }
+
+.box a:hover {
+  color: darkblue; /* Hover color for links */
+  text-decoration: underline; /* Underline on hover */
+}
+
 
 .ProseMirror {
   padding: 10px;
@@ -145,7 +169,6 @@ body {
   text-decoration: underline;
 }
 
-/* ............................ */
 .textEditor {
   border-radius: 5px;
   border: 1px solid grey;
@@ -204,7 +227,8 @@ button.is_active {
   padding: 0;
 }
 
-.ProseMirror h2, .ProseMirror h3 {
+.ProseMirror h2,
+.ProseMirror h3 {
   margin-top: 20px;
   margin-bottom: 10px;
 }

@@ -2,9 +2,6 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 
 const HelmetWrapper = ({ title, description }) => {
-  // Log title for debugging purposes (optional)
-  // console.log("Current title:", title);
-
   return (
     <Helmet>
       <title>{title || "Best Skin & Hair Care Clinic in Coimbatore - Reflect Clinic"}</title>
