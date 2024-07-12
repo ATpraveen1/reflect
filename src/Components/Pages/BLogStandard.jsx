@@ -38,11 +38,10 @@ const BLogStandard = () => {
 
   return (
     <>
-    
         <div className="container section-padding">
         <div className="md:flex gap-10">
         <div className="flex items-start mb-3  justify-center" style={{flexDirection:"column"}}>
-        <h1 className="mini-title ">Results</h1>
+        <h2 className="mini-title ">Results</h2>
         <div className="column-title  ">
             Before and After <span className="text-secondary"> Treatments</span>
         </div>
