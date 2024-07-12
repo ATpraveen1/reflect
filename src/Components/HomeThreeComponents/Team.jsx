@@ -10,7 +10,7 @@ const Team = () => {
         <div className="text-center">
           {/* <div className="column-title"> */}
           <div className="m-0 p-0">
-            <h1>Our Expert <span className="text-secondary">Consultants</span></h1>
+            <h2>Our Expert <span className="text-secondary">Consultants</span></h2>
           </div>
         </div>
         <CoralinaCloud />

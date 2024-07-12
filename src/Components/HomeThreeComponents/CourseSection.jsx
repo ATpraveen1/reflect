@@ -13,7 +13,7 @@ const CourseSection = () => {
       <div className="container">
         <div className="serv-tabs">
           <div className="serv-tone">
-            <h1 className="mini-title">Treatments</h1>
+            <h2 className="mini-title">Treatments</h2>
             <div className="column-title ">
             Comprehensive <span className="text-secondary">Dermatology</span> Solutions
             </div>
@@ -32,7 +32,7 @@ const CourseSection = () => {
               <SingleCourse key={index} data={data} />
             ))
           ) : (
-            <h1 style={{ textAlign: "center" }}>Not Found Any Data</h1>
+            <h2 style={{ textAlign: "center" }}>Not Found Any Data</h2>
           )}
         </div>
        
