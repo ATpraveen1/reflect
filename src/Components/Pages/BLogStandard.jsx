@@ -46,15 +46,9 @@ const BLogStandard = () => {
             Before and After <span className="text-secondary"> Treatments</span>
         </div>
         <div className="team-dettext">Experience transformative skincare journeys. Witness stunning before and after results, as confidence and radiant skin emerge at Reflect Clinic</div>
-        
         </div>
-           
-          <div style={{margin:"auto"}} >
-            
-        
+      <div style={{margin:"auto"}} >
       <div className="flex item-center justify-center my-swiper" >
-      
-
       <Swiper
         slidesPerView={1}
         spaceBetween={0}

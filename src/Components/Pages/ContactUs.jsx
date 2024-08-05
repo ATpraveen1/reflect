@@ -5,9 +5,7 @@ import Footer from "../Footer";
 import Header from "../Header";
 import PageBanner from "../PageBanner";
 import contact from "../../assets/images/banner/contact.webp";
-import BookBtn from "../BookBtn";
 import HelmetWrapper from '../../HelmetWrapper';
-import { Helmet } from 'react-helmet';
 
 const ContactUs = () => {
   return (
@@ -26,10 +24,6 @@ const ContactUs = () => {
               <h2 className="column-title ">
               We're Just a <span className="text-secondary">Click</span> Away. 
               </h2>
-              
-              {/* <div className="mt-10">
-              <BookBtn btnclass={"hidden"} /> 
-              </div> */}
               <ul className=" list-item space-y-6 pt-8">
                 <li className="flex">
                   <div className="flex-none mr-6">

@@ -6,8 +6,6 @@ import Header from "../Header";
 import Team from "../HomeThreeComponents/Team";
 import Intro from "../Intro";
 import BLogStandard from "../Pages/BLogStandard";
-// import HelmetWrapper from '../../HelmetWrapper';
-// import { Helmet } from 'react-helmet';
 
 const HomeOne = () => {
   useEffect(() => {
@@ -16,10 +14,6 @@ const HomeOne = () => {
 
   return (
     <>
-      {/* <HelmetWrapper
-        title="Best Skin & Hair Care Clinic in Coimbatore - Reflect Clinic"
-        description="Elevate your beauty with the finest skin and hair care treatments at Reflect Clinic, the trusted clinic in Coimbatore. Book your appointment now!"
-      /> */}
       <Header />
       <Banner />
       <Intro />

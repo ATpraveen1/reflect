@@ -84,15 +84,14 @@ body {
   transition: background-color 0.3s ease;
 }
 
-/* CSS for hyperlinks */
 .box a {
-  color: blue; /* Link color */
-  text-decoration: underline; /* Underline for links */
+  color: blue;
+  text-decoration: underline; 
 }
 
 .box a:hover {
-  color: darkblue; /* Hover color for links */
-  text-decoration: underline; /* Underline on hover */
+  color: darkblue; 
+  text-decoration: underline;
 }
 
 

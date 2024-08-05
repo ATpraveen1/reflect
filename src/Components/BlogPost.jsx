@@ -58,7 +58,7 @@ const BlogPost = () => {
                 style={{ width: '100%', height: 'auto', borderRadius: '8px', marginBottom: '16px' }} 
               />
               <div className="px-10 pb-10 blog-content"> 
-                <h2>{blogPost.title}</h2>
+                <h1 className='mini-title'>{blogPost.title}</h1>
                 <div>{blogPost.description}</div>
                 <div>{parse(blogPost.subDescription)}</div>
               </div>
