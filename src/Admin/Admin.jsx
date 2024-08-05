@@ -7,7 +7,6 @@ import { storage, db, storageRef } from '../config/Firebase'
 import { collection, addDoc, getDocs, deleteDoc, updateDoc , doc, onSnapshot  } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Button } from '@mui/material';
-// import { FaCloudUploadAlt } from "react-icons/fa";
 import YoutubePlayer from 'react-youtube-player';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -110,7 +109,6 @@ export default function Admin() {
   const [afterImage, setAfterImage] = useState(null);
   const [title, setTitle] = useState('');
   const [items, setItems] = useState([]);
-
 
   //appointment
   const [formData, setFormData] = useState([]);
@@ -688,152 +686,12 @@ export default function Admin() {
       </Tabs>
     </TabPanel>
 
-    {/* <TabPanel value={2}>
-    <Tabs aria-label="Basic tabs" defaultValue={0}>
-    <TabList>
-        <Tab>Create Offers</Tab>
-        <Tab>Offers List</Tab>
-       
-    </TabList>
-    <TabPanel value={0}>
-    <div className='text-2xl p-5'>Create Offers</div>
-
-<div className='px-5'>
-  <div>
-    Enter Text
-  </div>
-  <div className='mb-5'>
-    <input type="text" onChange={(e)=>setText(e.target.value)} />
-  </div>
-  <div>
-    Select Content Type is Video Or image
-  </div>
-  <div>
-     <div><input type="radio" name="content" onChange={()=>{setContentType("image")}} /> Image</div>
-     <div><input type="radio" name="content" onChange={()=>{setContentType("video")}} /> Video</div>
-  </div>
-  
-  {
-    contentType === "video" || contentType === "image" ?
-  <div>
-  {
-    contentType === "image"  ?        
-  <div style={{padding:"10px 0px 10px 0px"}}>
-     Uplaod Image<br/><br/>
-      <label htmlFor="image" >
-       <span className='flex items-center justify-center' style={{ border:"2px solid gray ",width:"200px",borderRadius:"20px"}}><FaCloudUploadAlt /> Upload file</span>
-      </label>
-      <input id="image" type="file" style={{display:"none"}} onChange={(e)=>setImage(e.target.files[0])} />
-  </div>
-  :
-  <div style={{padding:"10px 0px 10px 0px"}}>           
-      <label htmlFor="video" style={{margin:"10px 0px 10px 0px"}} >
-      Enter Video Link
-      </label>
-      <input id="video" type="text" onChange={(e)=>setVideoLink(e.target.value)} />
-      {
-    videoLink ?        
-       <Card style={{boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px"}} className='m-auto' sx={{ maxWidth: 345 }}>
-              <CardMedia
-                  sx={{ height: 240 }}
-                  // image={img}
-                  title="green iguana"
-              >
-                <YoutubePlayer
-              videoId={offersource}
-              playbackState='unstarted'
-              height='100%'
-              width='100%'
-              configuration={
-                  {
-                      showinfo: 1,
-                      controls: 1
-                  }
-              }
-          />
-              </CardMedia>
-             
-              
-          </Card>
-          :
-          null
-  }
-  </div>
-  }
-  </div>
-  :
-  null
-}
-  
- 
- {offersource && Text && contentType ?
-   <div style={{margin:"10px 0px 10px 0px"}}>
-   <button style={{backgroundColor:"green",color:'white',fontWeight:"bold",padding:"5px",borderRadius:'10px'}}
-    onClick={()=>OfferCreateHandle()}>Confirm</button>
- </div>
- :
- null
- } 
-</div>
-    </TabPanel>
-    <TabPanel value={1}>
-    <div className='bookcard-grid'>
-        {Offers.map((item) => (
-         <div className="book-card" key={item.id}>
-            <div>
-            {
-              item.contentType === "image" ?
-            
-             <img src={item.offerSource}  alt={item.title}  />            
-            :
-             <Card style={{boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px"}} className='m-auto' sx={{ maxWidth: 345 }}>
-                    <CardMedia
-                        sx={{ height: 240 }}
-                        // image={img}
-                        title="green iguana"
-                    >
-                      <YoutubePlayer
-                    videoId={item.offerSource}
-                    playbackState='unstarted'
-                    height='100%'
-                    width='100%'
-                    configuration={
-                        {
-                            showinfo: 1,
-                            controls: 1
-                        }
-                    }
-                />
-                    </CardMedia>
-                   
-                    
-                </Card>
-            }
-            </div>
-            <p>{item.Text}</p>
-            <div className='flex '>
-            <Button variant='contained' color='error' style={{margin: "20px"}} onClick={() => handleOfferDelete(item.id)}>Delete</Button>
-            {item.status === "OPEN" ?<Button variant='contained' style={{margin: "20px",backgroundColor:'green'}} onClick={() => handlerUpdateOfferStatus(item.id ,"CLOSED")}>Able</Button> : <Button variant='contained' color='error' style={{margin: "20px",backgroundColor:'orange'}} onClick={() => handlerUpdateOfferStatus(item.id,"OPEN")}>Disable</Button>}
-            </div>
-          </div>
-        ))}
-      </div>
-    </TabPanel>
-    </Tabs>
-      
-    
-           bk
-    </TabPanel > */}
-
     <TabPanel value={3}>
         <div>
           <div>Finish My Session Now </div>
           <div><Button variant='contained' color='error' onClick={LogoutHandler}>Logout</Button></div>
         </div>
     </TabPanel>
-
-
-    
     </Tabs>
   )
 }

@@ -28,11 +28,7 @@ const Banner = () => {
   const mobileStyles = isMobile ? {
     position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', fontWeight: 'bold', fontSize: '1.8rem'
   } : {};
-
-  // const tabletStyles = window.innerWidth <= 768 ? {
-  //   '.text-4xl': { fontSize: '3rem' }, '.text-6xl': { fontSize: '4rem' }, '.lg\\:text-lg': { fontSize: '1.25rem' }
-  // } : {};
-
+  
   return (
     <div className="relative h-screen w-full bg-cover bg-center flex items-center">
       <img src={imageSrc} alt="bannerimg" className="absolute inset-0 w-full h-full object-cover z-0" />

@@ -1,9 +1,7 @@
-
 import React, { useState } from "react";
 import { courseData } from "../../constant/dummyData";
 import CourseFilter from "./CourseFilter";
 import SingleCourse from "./SingleCourse";
-
 
 const CourseSection = () => {
   const [activeData, setActiveData] = useState("skin");
@@ -35,7 +33,6 @@ const CourseSection = () => {
             <h2 style={{ textAlign: "center" }}>Not Found Any Data</h2>
           )}
         </div>
-       
       </div>
     </div>
   );

@@ -1,7 +1,5 @@
-
 import React from "react";
 import footerLogo from "../assets/images/logo/reff.webp";
-import BookBtn from "./BookBtn";
 import { call, mail, map } from "../constant/images";
 
 const Footer = () => {
@@ -27,26 +25,6 @@ const Footer = () => {
                     <iconify-icon icon="bxl:youtube"></iconify-icon>
                   </a>
                 </li>
-                {/* <li>
-                  <a
-                    aria-label="Twitter icon"
-                    href="#"
-                    className="flex h-12 w-12 flex-col items-center justify-center rounded bg-white bg-opacity-[0.08] text-2xl text-white
-                  transition hover:bg-primary hover:text-white"
-                  >
-                    <iconify-icon icon="bxl:twitter"></iconify-icon>
-                  </a>
-                </li> */}
-                {/* <li>
-                  <a
-                  aria-label="Linkedin icon"
-                    href="#"
-                    className="flex h-12 w-12 flex-col items-center justify-center rounded bg-white bg-opacity-[0.08] text-2xl text-white
-                  transition hover:bg-primary hover:text-white"
-                  >
-                    <iconify-icon icon="bxl:linkedin"></iconify-icon>
-                  </a>
-                </li> */}
                 <li>
                   <a
                     aria-label="Instagram icon"
